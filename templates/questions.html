@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %} Survey Question {% endblock %}
+
+{% block content %}
+  <h1>Survey Title: {{survey.title}}</h1>
+  <p>Instructions: {{survey.instructions}}</p>
+
+  {% if question_id >= 0 and question_id < survey.questions|length %}
+    <form action="/questions/{{ question_id }}" method="POST">
+      <p>{{ survey.questions[question_id].question }}</p>
+      {% for choice in survey.questions[question_id].choices %}
+        <label>
+          <input type="radio" name="response" value="{{ choice }}">
+          {{ choice }}
+        </label><br>
+      {% endfor %}
+      <button type="submit">Next</button>
+    </form>
+  {% else %}
+    <p>No question found for the given ID.</p>
+  {% endif %}
+
+  {% for msg in get_flashed_messages() %}
+    <p>{{ msg }}</p>
+  {% endfor %}
+{% endblock %}
